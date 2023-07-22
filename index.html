@@ -8,14 +8,24 @@
 </head>
 
 <body style="margin: 0px; background-color: black;">
+    <button onclick="toggleAudio()" style="background-color: transparent; border: none; padding: 0;">
+        <img id="volumeIcon" src="img/mute.png" alt="Volume On">
+    </button>
+    <audio id="music" controls loop style="display: none;">
+        <source src="music/Pacman.mp3" type="audio/mpeg">
+    </audio>
     <canvas id="canvas" width="500" height="500"></canvas>
     <div style="display: none;">
         <img id="animations" src="img/animations.gif" alt="">
         <img id="ghost" src="img/ghost.png" alt="">
+        <img id="audio" src="img/audio.png" alt="">
+        <img id="mute" src="img/mute.png" alt="">
     </div>
     <script src="js/ghost.js"></script>
     <script src="js/pacman.js"></script>
     <script src="js/game.js"></script>
+    <script src="js/music.js"></script>
+    
 </body>
 
 </html>
