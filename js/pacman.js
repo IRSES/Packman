@@ -25,7 +25,18 @@ class Pacman {
     }
     
     eat() {
-
+        for (let i = 0; i < map.length; i++) {
+            for (let j = 0; j < map[0].length; j++) {
+                if (
+                    map[i][j] == 0 && 
+                    this.getMapX() == j &&
+                    this.getMapY() == i
+                ) {
+                    map[i][j] = 3;
+                    score++;
+                }
+            }
+        }
     };
 
     moveBackwards() {
@@ -61,25 +72,6 @@ class Pacman {
                 break;
         }
     }
-
-    // checkCollision() { // todo
-    //     let x = Math.floor(this.x / oneBlockSize);
-    //     let y = Math.floor(this.y / oneBlockSize);
-
-    //     if (
-    //         y < 0 ||
-    //         y >= map.length ||
-    //         x < 0 ||
-    //         x >= map[0].length ||
-    //         map[y][x] === 1 ||
-    //         (y + 1 < map.length && map[y + 1][x] === 1) ||
-    //         (x + 1 < map[0].length && map[y][x + 1] === 1) ||
-    //         (y + 1 < map.length && x + 1 < map[0].length && map[y + 1][x + 1] === 1)
-    //     ) {
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
     checkCollision() {
         if (
