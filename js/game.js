@@ -18,6 +18,9 @@ const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
+const entrance1 = { x: 0, y: oneBlockSize * 12 };
+const entrance2 = { x: oneBlockSize * 24, y: oneBlockSize * 12 };
+
 
 let map = [ 
     [1,1,1,1,1, 1,1,1,1,1, 1,1,0,1,1, 1,1,1,1,1, 1,1,1,1,1],
@@ -72,6 +75,11 @@ let gameLoop = () => {
 
 let update = () => {
     pacman.moveProcess();
+
+    if (reachedEntrance(entrance1) || reachedEntrance(entrance2)) {
+        teleportToOtherEntrance();
+    }
+
     pacman.eat();
 };
 
@@ -175,6 +183,28 @@ let createNewPacman = () => {
         oneBlockSize,
         oneBlockSize / 5
     );
+};
+
+let reachedEntrance = (entrance) => {
+    if (
+        pacman.x >= entrance.x &&
+        pacman.x + pacman.width <= entrance.x + oneBlockSize &&
+        pacman.y >= entrance.y &&
+        pacman.y + pacman.height <= entrance.y + oneBlockSize
+    ) {
+        return true;
+    }
+    return false;
+};
+
+let teleportToOtherEntrance = () => {
+    if (reachedEntrance(entrance1)) {
+        pacman.x = entrance2.x;
+        pacman.y = entrance2.y;
+    } else if (reachedEntrance(entrance2)) {
+        pacman.x = entrance1.x;
+        pacman.y = entrance1.y;
+    }
 };
 
 createNewPacman();
