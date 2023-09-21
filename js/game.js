@@ -13,6 +13,8 @@ let wallSpaceWidth = oneBlockSize / 1.5;
 let wallOffset = (oneBlockSize - wallSpaceWidth) / 2;
 let wallInnerColor = "black";
 let score = 0;
+let pacman;
+let ghosts = [];
 
 const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
@@ -20,6 +22,14 @@ const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
 const entrance1 = { x: 0, y: oneBlockSize * 12 };
 const entrance2 = { x: oneBlockSize * 24, y: oneBlockSize * 12 };
+
+let ghostCount = 4;
+let ghostImageLocations = [
+    { x: 0, y: 0 },
+    { x: 176, y: 0 },
+    { x: 0, y: 121 },
+    { x: 176, y: 121 },
+];
 
 
 let map = [ 
@@ -67,6 +77,16 @@ function rotateMap90DegreesRight(map) {
 
 map = rotateMap90DegreesRight(map);
 
+let randomTargetsForGhosts = [
+    { x: 1 * oneBlockSize, y: 1 * oneBlockSize },
+    { x: 1 * oneBlockSize, y: (map.length - 2) * oneBlockSize },
+    { x: (map[0].length - 2) * oneBlockSize, y: oneBlockSize },
+    {
+        x: (map[0].length - 2) * oneBlockSize,
+        y: (map.length - 2) * oneBlockSize,
+    },
+];
+
 
 let gameLoop = () => {
     update();
@@ -75,12 +95,11 @@ let gameLoop = () => {
 
 let update = () => {
     pacman.moveProcess();
-
+    pacman.eat();
+    updateGhosts();
     if (reachedEntrance(entrance1) || reachedEntrance(entrance2)) {
         teleportToOtherEntrance();
     }
-
-    pacman.eat();
 };
 
 let drawFoods = () => {
@@ -115,6 +134,7 @@ let draw = () => {
     drawWalls();
     drawFoods();
     pacman.draw();
+    drawGhosts();
     drawScore();
 };
 
@@ -175,6 +195,25 @@ let drawWalls = () => {
     }
 };
 
+let createGhosts = () => {
+    ghosts = [];
+    for (let i = 0; i < ghostCount * 2; i++) {
+        let newGhost = new Ghost(
+            11 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+            12 * oneBlockSize + (i % 2 == 0 ? 0 : 1) * oneBlockSize,
+            oneBlockSize,
+            oneBlockSize,
+            pacman.speed / 2,
+            ghostImageLocations[i % 4].x,
+            ghostImageLocations[i % 4].y,
+            124,
+            116,
+            6 + i
+        );
+        ghosts.push(newGhost);
+    }
+};
+
 let createNewPacman = () => {
     pacman = new Pacman(
         oneBlockSize,
@@ -208,6 +247,7 @@ let teleportToOtherEntrance = () => {
 };
 
 createNewPacman();
+createGhosts();
 gameLoop();
 
 window.addEventListener("keydown", (event) => {
