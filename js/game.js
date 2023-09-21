@@ -20,10 +20,11 @@ const DIRECTION_RIGHT = 4;
 const DIRECTION_UP = 3;
 const DIRECTION_LEFT = 2;
 const DIRECTION_BOTTOM = 1;
+let lives = 3;
 const entrance1 = { x: 0, y: oneBlockSize * 12 };
 const entrance2 = { x: oneBlockSize * 24, y: oneBlockSize * 12 };
 
-let ghostCount = 4;
+let ghostCount = 3;
 let ghostImageLocations = [
     { x: 0, y: 0 },
     { x: 176, y: 0 },
@@ -89,8 +90,23 @@ let randomTargetsForGhosts = [
 
 
 let gameLoop = () => {
-    update();
     draw();
+    update();
+};
+
+let onGhostCollision = () => {
+    restartPacmanAndGhosts();
+    if (lives == 0) {
+    }
+};
+
+let restartPacmanAndGhosts = () => {
+    createNewPacman();
+    createGhosts();
+    lives--;
+    if (lives == 0) {
+        gameOver();
+    }
 };
 
 let update = () => {
@@ -99,6 +115,13 @@ let update = () => {
     updateGhosts();
     if (reachedEntrance(entrance1) || reachedEntrance(entrance2)) {
         teleportToOtherEntrance();
+    }
+    if (pacman.checkGhostCollision(ghosts)) {
+        onGhostCollision();
+    }
+    if (score >= 290) {
+        drawWin();
+        clearInteval(gameInterval)
     }
 };
 
@@ -115,6 +138,43 @@ let drawFoods = () => {
                 );
             }
         }
+    }
+};
+
+let gameOver = () => {
+    clearInterval(gameInterval);
+    drawGameOver();
+}
+
+let drawGameOver = () => {
+    canvasContext.font = "60px Impact, fantasy";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Game Over!", 110, 275)
+}
+
+let drawWin = () => {
+    canvasContext.font = "60px Impact, fantasy";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Winner!", 150, 275)
+}
+
+let drawRemainingLives = () => {
+    canvasContext.font = "40px Impact, fantasy";
+    canvasContext.fillStyle = "white";
+    canvasContext.fillText("Lives: ", 240, oneBlockSize * (map.length + 2));
+
+    for (let i = 0; i < lives; i++) {
+        canvasContext.drawImage(
+            pacmanFrames,
+            2 * oneBlockSize,
+            0,
+            oneBlockSize,
+            oneBlockSize,
+            350 + i * oneBlockSize,
+            oneBlockSize * map.length + 18,
+            oneBlockSize,
+            oneBlockSize
+        );
     }
 };
 
@@ -136,6 +196,7 @@ let draw = () => {
     pacman.draw();
     drawGhosts();
     drawScore();
+    drawRemainingLives();
 };
 
 let gameInterval = setInterval(gameLoop, 1000 / fps);

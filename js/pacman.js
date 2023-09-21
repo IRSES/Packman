@@ -85,9 +85,18 @@ class Pacman {
         return false;
     };
 
-    checkGhostCollision() {
-        //todo
-    };
+    checkGhostCollision(ghosts) {
+        for (let i = 0; i < ghosts.length; i++) {
+            let ghost = ghosts[i];
+            if (
+                ghost.getMapX() == this.getMapX() &&
+                ghost.getMapY() == this.getMapY()
+            ) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     changeDirectionIfPossible() {
         if (this.direction == this.nextDirection) return;
@@ -104,7 +113,7 @@ class Pacman {
 
     changeAnimation(){
         this.currentFrame = 
-        this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
+            this.currentFrame == this.frameCount ? 1 : this.currentFrame + 1;
     };
 
     draw() {
